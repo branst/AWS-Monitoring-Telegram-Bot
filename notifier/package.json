@@ -1,0 +1,10 @@
+{
+  "name": "notifier",
+  "version": "1.0.0",
+  "description": "Notifier to Telegram Chat",
+  "main": "index.js",
+  "author": "Branko Straub",
+  "dependencies": {
+    "request": "^2.88.2"
+  }
+}
