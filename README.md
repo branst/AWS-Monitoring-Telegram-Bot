@@ -38,7 +38,7 @@ To deploy the Lambda functions you are going to need the AWS CLI, NodeJS and CLA
 * NodeJS: https://nodejs.org/en/
 * CLAUDIA.JS: https://claudiajs.com/tutorials/installing.html
 
-Once you install each requirement, make sure you properly configured your AWS Credentials and Region using ``` aws configure ``` with the correct keys. It will require a user which has at least Cloudformation, SNS, IAM, Lambda and ApiGateway FullAccess permissions.
+Once you install each requirement, make sure you properly configured your AWS Credentials and Region using ``` aws configure ``` with the correct keys. It will require a user which has at least Cloudwatch, SNS, IAM, Lambda and ApiGateway FullAccess permissions.
 
 The next steps assume you will be working on us-east-1 (N. Virginia) but you can deploy this solution to any other AWS region, make sure to adapt the scripts and templates below.
 
