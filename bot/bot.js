@@ -11,7 +11,6 @@ const { RDSClient, DescribeDBInstancesCommand } = require("@aws-sdk/client-rds")
 const { AthenaClient, StartQueryExecutionCommand,GetQueryResultsCommand } = require("@aws-sdk/client-athena");
 
 //ENV VARIBLE FOR AWS REGION
-
 const AWSRegion = 'us-east-1'
 
 const cwclient = new CloudWatchClient({ region: AWSRegion });
@@ -23,7 +22,6 @@ const athenaclient = new AthenaClient({ region: AWSRegion });
 const MS_PER_MINUTE = 60000;
 
 //MORE ENV VARIABLES, ADD THEM ON AWS LAMBDA CONSOLE
-
 const ChatId = process.env.ChatId
 const ClusterName = process.env.ClusterName
 const ServiceName = process.env.ServiceName
@@ -33,7 +31,6 @@ const CFName = process.env.CFName
 
 //TWEETS OPTIONAL FEATURE 
 //CREATE A S3 OUTPUT BUCKET ON ATHENA IF YOU WANT TO ENABLE THIS FEATURE
-
 const GlueCatalog = process.env.GlueCatalog
 const GlueDatabase = process.env.GlueDatabase
 const AthenaOutputBucketName = process.env.AthenaOutputBucketName 
@@ -42,22 +39,19 @@ var botBuilder = require('claudia-bot-builder');
 
 module.exports = botBuilder(async function (request) {
 
-	var msg = ''
-
 	//IT RETRIEVES AUTHORIZED ARRAYS OF CHAT IDS FROM THE ENV, IF THE ID DOESN'T MATCH IT WILL REJECT THE REQUEST
-
 	if(! ChatId.includes(request.sender)){
 		return 'Unauthorized'
 	}
 
-	switch (request.text) {
-		
-		//THIS USE CASE RETURNS ALARMS WHICH STATE ITS 'ALARM'
+	var msg = ''
+	var data;
+	var now = new Date;
 
+	switch (request.text) {
+		//THIS USE CASE RETURNS ALARMS WHICH STATE ITS 'ALARM'
 		case '/alarms':
 		case '/alarms@BotUserName':
-
-			var data;
 			const paramsCW = {
 			  StateValue: 'ALARM'
 			};
@@ -71,7 +65,7 @@ module.exports = botBuilder(async function (request) {
 			
 			if (data.MetricAlarms.length === 0){
 				msg='No Active Alarms'
-			}else{
+			} else {
 				msg='Active Alarms: ';
 				data.MetricAlarms.forEach(element => msg+='\n'+element.AlarmName);
 			}
@@ -79,13 +73,9 @@ module.exports = botBuilder(async function (request) {
 
 		//THIS USE CASE RETURNS NEGATIVE TWEETS USING ATHENA, IT REQUIRES THE DEPLOY OF AI-DRIVEN SOCIAL MEDIA DASHBOARD
 		//https://aws.amazon.com/solutions/implementations/ai-driven-social-media-dashboard/
-
 		case '/tweets':
 		case '/tweets@BotUserName':
-
-			//ADAPT SQL STATEMENT AS YOU SEE FIT FOR YOUR USE CASE
-		
-			var data;
+			//ADAPT SQL STATEMENT AS YOU SEE FIT FOR YOUR USE CASE		
 			const paramsAthena = {
 			  QueryString: 'SELECT tweetid, text, sentiment FROM tweet_sentiments WHERE sentiment like \'NEGATIVE\' ORDER BY date desc limit 10;',
 			  QueryExecutionContext: {
@@ -121,7 +111,7 @@ module.exports = botBuilder(async function (request) {
 			
 			if (dataResults.ResultSet.Rows.length === 0){
 				msg='No new Tweets'
-			}else{
+			} else {
 				msg='New Tweets:';
 				dataResults.ResultSet.Rows.forEach((element, index) => {
 				 	if (index === 0) return;
@@ -131,10 +121,8 @@ module.exports = botBuilder(async function (request) {
 			break;
 
 		//THIS USE CASE RETURNS THE METRICS OF AN ECS SERVICE
-
 		case '/fargate':
 		case '/fargate@BotUserName':
-
 			var data_fargate;
 			const paramsECS = {
 			  cluster: ClusterName,
@@ -150,13 +138,9 @@ module.exports = botBuilder(async function (request) {
 			
 			if (data_fargate.services.length === 0){
 				msg='No Running Service with that name'
-			}else{
-
+			} else {
 				//IF WE FOUND A MATCHING RUNNING SERVICE, WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
-				//CPU AND MEMORY USAGE
-
-				var now = new Date
-				
+				//CPU AND MEMORY USAGE				
 				var data_fargate_cw;
 				const paramsECS_CW = {
 				  EndTime: new Date(now - 1 * MS_PER_MINUTE),
@@ -228,8 +212,6 @@ module.exports = botBuilder(async function (request) {
 
 			//WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
 			//REQUESTS, CONNECTIONS, RESPONSE TIMES AND ERRORS
-
-			var now = new Date
 			var data_alb_cw;
 			const paramsALB_CW = {
 			  EndTime: new Date(now - 1 * MS_PER_MINUTE),
@@ -366,7 +348,6 @@ module.exports = botBuilder(async function (request) {
 			//WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
 			//REQUESTS, BYTES AND ERRORS
 
-			var now = new Date
 			var data_cf_cw;
 			const paramsCF_CW = {
 			  EndTime: new Date(now - 1 * MS_PER_MINUTE),
@@ -479,8 +460,6 @@ module.exports = botBuilder(async function (request) {
 
 		case '/rds':
 		case '/rds@BotUserName':
-			
-			var data;
 			const paramsRDS = {
 			  DBInstanceIdentifier: RDSName
 			};
@@ -494,13 +473,9 @@ module.exports = botBuilder(async function (request) {
 			
 			if (data.DBInstances.length === 0){
 				msg='No Running Instance'
-			}else{
-
-				//IF WE FOUND IT, WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
+			} else {
+				//IF WE FOUNT IT, WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
 				//CPU, CONNECTIONS AND IOPS
-
-				var now = new Date
-				
 				var data_rds_cw;
 				const paramsRDS_CW = {
 				  EndTime: new Date(now - 1 * MS_PER_MINUTE),
@@ -602,10 +577,8 @@ module.exports = botBuilder(async function (request) {
 });
 
 //FUNCTION TO AWAIT ATHENA RESULTS
-
 function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
-
