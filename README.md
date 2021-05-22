@@ -95,12 +95,12 @@ Now you are going to assign it basic permissions so it can log any output or err
 aws iam attach-role-policy --role-name lambda-notifier-role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole 
 ```
 
-Let's install the dependencies, zip them, create and deploy the function (make sure to replace the AccountID, ApiKey and ChatID with yours).
+Let's install the dependencies, zip them, create and deploy the function (make sure to replace the AccountI, ApiKey and ChatID with yours).
 
 ```  
 npm install
 zip -r function.zip . -x trust-policy.json
-aws lambda create-function --function-name aws-lambda-telegram-notifier --zip-file fileb://function.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::{AccountID}:role/lambda-notifier-role --environment "Variables={API_KEY={APIKey},CHAT_ID={ChatID}}"
+aws lambda create-function --function-name aws-lambda-telegram-notifier --zip-file fileb://function.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::{AccountId}:role/lambda-notifier-role --environment "Variables={API_KEY={APIKey},CHAT_ID={ChatID}}"
 ```
 
 Now you need to Subscribe the newly created Lambda function to the existing SNS Topic. Replace twice the AccountId with yours.
