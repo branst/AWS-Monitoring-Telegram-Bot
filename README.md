@@ -4,7 +4,7 @@ The AWS Monitoring Telegram Bot is a subset of two projects that can be deployed
 
 * Proactive push notifications: when a alarm on Amazon Cloudwatch its breached (status change from OK to ALARM) it triggers a SNS notification that invokes an AWS Lambda which in return sends a message to a Telegram Group / 1:1 Chat via a Bot with the alarm status and its values.
 
-* Reactive status updates: upon request from a Group / 1:1 Chat via a Telegram Bot, the command invokes an AWS Lambda function via an Amazon API Gateway. The Lambda function uses CLAUDIA.JS Bot Builder Framework, it then queries the correct AWS service depending of the utilized command: RDS, ECS, Fargate, Cloudfront, ALB, EC2 and others returning its usage, metrics and indicators.<br /><br />Example: the /rds command will retrieve the database size (via the RDS API) of the specified instance in adittion to its current CPU, Memory and IOPS usage utilizing the Cloudwatch Metrics API.
+* Reactive status updates: upon request from a Group / 1:1 Chat via a Telegram Bot, the command invokes an AWS Lambda function via an Amazon API Gateway. The Lambda function uses CLAUDIA.JS Bot Builder Framework, it then queries the correct AWS service depending of the utilized command: RDS, ECS, Fargate, Cloudfront, ALB, EC2 and others returning its usage, metrics and indicators.<br /><br />Example: the /rds command will retrieve the database size (via the RDS API) of the specified instance in addition to its current CPU, Memory and IOPS usage utilizing the Cloudwatch Metrics API.
 
 ## Architecture Diagram
 
@@ -22,11 +22,11 @@ Once you created the Bot you need to interact with the Bot Father to add command
 
 ![Bot Commands](img/002_bot_commands.png?raw=true "Bot Commands")
 
-You should now create a Telegram group and invite the Bot to it alongside any other teams members. Once you do that, proceed to type '/' followed by any of the previously created commands. This will initiate our interaction with the Bot.
+You should now create a Telegram group and invite the Bot to it alongside any other team members. Once you do that, proceed to type '/' followed by any of the previously created commands. This will initiate our interaction with the Bot.
 
 ![Bot Group](img/003_bot_group.png?raw=true "Bot Group")
 
-Lastly, once you initiated the conversation you are now able to fetch our Group Chat ID which you are latter going to use on our Lambda functions. You should navigate in a browser to https://api.telegram.org/bot{YourBOTToken}/getUpdates (replacing {YourBOTToken} with the token you got from the BotFather). You should annotate the Chat ID, in my case: '-584694398'.
+Lastly, once you initiate the conversation you are now able to fetch our Group Chat ID which you are later going to use on our Lambda functions. You should navigate in a browser to https://api.telegram.org/bot{YourBOTToken}/getUpdates (replacing {YourBOTToken} with the token you got from the BotFather). You should annotate the Chat ID, in my case: '-584694398'.
 
 ![Bot Chat ID](img/004_bot_chat_id.png?raw=true "Bot Chat ID")
 
@@ -38,11 +38,11 @@ To deploy the Lambda functions you are going to need the AWS CLI, NodeJS and CLA
 * NodeJS: https://nodejs.org/en/
 * CLAUDIA.JS: https://claudiajs.com/tutorials/installing.html
 
-Once you installed each requirement, make sure you propered configured your AWS Credentials and Region using ``` aws configure ``` with the correct keys. It will require to have an user which has at least Cloudformation, SNS, IAM, Lambda and ApiGateway FullAccess permissions.
+Once you install each requirement, make sure you properly configured your AWS Credentials and Region using ``` aws configure ``` with the correct keys. It will require a user which has at least Cloudformation, SNS, IAM, Lambda and ApiGateway FullAccess permissions.
 
 ### SNS Topic
 
-Using the AWS CLIy you are going to create the SNS Topic that is going to receive the alarm's status changes and then trigger notifications to our Lambda function. 
+Using the AWS CLI you are going to create the SNS Topic that is going to receive the alarm's status changes and then trigger notifications to our Lambda function. 
 
 ``` 
 aws sns create-topic --name CW_Alarms_To_Lambda
@@ -50,11 +50,11 @@ aws sns create-topic --name CW_Alarms_To_Lambda
 
 ### Cloudwatch Alarms
 
-On the AWS Console let's create a Cloudwatch Alarm that is going to trigger notifications into the SNS topic upon metrics changes on AWS Services. For demo purposes I will create an Alarm based on the maximum ECS/Fargate CPU percentage usage on a 5 minutes period.
+On the AWS Console let's create a Cloudwatch Alarm that is going to trigger notifications into the SNS topic upon metrics changes on AWS Services. For demo purposes I will create an Alarm based on the maximum ECS/Fargate CPU percentage usage in a 5 minutes period.
 
 ![CW Alarm Metric](img/007_cw_alarm_metric.png?raw=true "CW Alarm Metric")
 
-If the value its higher than 50% on said period it will trigger a message to the SNS topic you previously created.
+If the value is higher than 50% on said period it will trigger a message to the SNS topic you previously created.
 
 ![CW Alarm SNS](img/009_cw_alarm_sns.png?raw=true "CW Alarm SNS")
 
@@ -95,7 +95,7 @@ Now you are going to assign it basic permissions so it can log any output or err
 aws iam attach-role-policy --role-name lambda-notifier-role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole 
 ```
 
-Let's install the dependecies, zip them, create and deploy the function (make sure to replace the AccountID, ApiKey and ChatID with yours).
+Let's install the dependencies, zip them, create and deploy the function (make sure to replace the AccountID, ApiKey and ChatID with yours).
 
 ```  
 npm install
@@ -121,7 +121,7 @@ You managed to get the first Lambda function working, now each alarm breached th
 
 ### Lambda Bot
 
-To the deploy the second Lambda function let's use the CLAUDIA.JS CLI. It requires a [JSON file](bot/aditional_policies.json) which contains aditional IAM Policies to access RDS, ECS, Cloudwatch and Athena. Feel free to add more policies as needed. 
+To the deploy the second Lambda function let's use the CLAUDIA.JS CLI. It requires a [JSON file](bot/aditional_policies.json) which contains additional IAM Policies to access RDS, ECS, Cloudwatch and Athena. Feel free to add more policies as needed. 
 
 List of supported services, commands and their required environment variables.
 
@@ -150,11 +150,11 @@ sed -i '.bak' 's/BotUserName/MyBotUserName/g' bot.js
 rm bot.js.bak
 ```
 
-To use addional AWS services you will be required to go back to the Bot Father and add the needed commands (eg: /rds, /cloudfront, /alb) to trigger a Bot proper response to it.
+To use additional AWS services you will be required to go back to the Bot Father and add the needed commands (eg: /rds, /cloudfront, /alb) to trigger a Bot proper response to it.
 
-You can setup the required environment variables by using the --set-env parameter on the Claudia create command.
+You can set up the required environment variables by using the --set-env parameter on the Claudia create command.
 
-Not all environment variables are required for the Bot to work, for example, if you only want to monitor an ECS deployment, you just need to provide the ServiceName and ClusterName in addition to ChatId. You will see this scenario on the deploy command bellow. 
+Not all environment variables are required for the Bot to work, for example, if you only want to monitor an ECS deployment, you just need to provide the ServiceName and ClusterName in addition to ChatId. You will see this scenario on the deploy command below. 
 
 #### Deploy Lambda Bot
 
@@ -162,7 +162,7 @@ Not all environment variables are required for the Bot to work, for example, if 
 claudia create --region us-east-1 --api-module bot --name aws-lambda-telegram-bot --set-env "ChatId=['-58469439'],ClusterName=ecs-cluster,ServiceName=ecs-service" --policies aditional_policies.json --timeout 10
 ```
 
-Once create, you can also modify or add new environment variables from the AWS Lambda console.
+Once created, you can also modify or add new environment variables from the AWS Lambda console.
 
 ![Lambda Env](img/012_lambda_bot_env.png?raw=true "Lambda Env")
 
@@ -186,8 +186,8 @@ claudia update
 
 ## Feedback
 
-Any feedback, issues or comment are welcome.  
-Feel free to submit PRs to support aditional AWS Services or features.
+Any feedback, issues or comments are welcome.  
+Feel free to submit PRs to support additional AWS Services or features.
 
 
 
