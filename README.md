@@ -136,7 +136,7 @@ List of supported services, commands and their required environment variables.
 
 #### Notes
 
-If you try to contact the Bot from an unauthorized chat it will not allow us to retrieve the information.
+If you try to contact the Bot from an unauthorized chat it will not allow you to retrieve the information.
 
 ![Lambda Auth](img/014_lambda_bot_auth.png?raw=true "Lambda Auth")
 
