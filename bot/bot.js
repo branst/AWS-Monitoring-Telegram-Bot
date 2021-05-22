@@ -496,7 +496,7 @@ module.exports = botBuilder(async function (request) {
 				msg='No Running Instance'
 			}else{
 
-				//IF WE FOUNT IT, WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
+				//IF WE FOUND IT, WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
 				//CPU, CONNECTIONS AND IOPS
 
 				var now = new Date

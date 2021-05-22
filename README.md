@@ -64,13 +64,17 @@ aws cloudwatch put-metric-alarm --alarm-name Alarm-ECS-CPU-USAGE --alarm-descrip
 
 Continue to repeat this process for each alarm you want to create, using always the same SNS Topic.
 
-### Social Media Dashboard [optional]
+### [Optional] Social Media Dashboard 
 
 To use the built-in command /tweets you are going to need to deploy the AWS Social Media Dashboard solution which utilizes a set of AWS resources to perform real time analysis of Tweets using pre defined search prefixes, it then categorizes them and applies Machine Learning using Amazon Comprehend to detect intent, emotions and custom entities.
 
+You will be able to analyze in real time any negative or positive Tweets about your company, its products or features to ensure availability and user complaints, feedback or comments.
+
+![Tweets](img/0015_tweets.png?raw=true "Tweets")
+
 To deploy this solution, follow the steps detailed on: https://aws.amazon.com/solutions/implementations/ai-driven-social-media-dashboard/.
 
-You will need to annotate the Glue Catalog, Glue Database and Athena Output Bucket for later use.
+Once you finished deploying it, you will need to annotate the Glue Catalog, Glue Database and Athena Output Bucket for later use.
 
 ## Deploy
 
