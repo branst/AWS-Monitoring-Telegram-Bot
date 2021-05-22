@@ -45,7 +45,6 @@ module.exports = botBuilder(async function (request) {
 	var msg = ''
 
 	//IT RETRIEVES AUTHORIZED ARRAYS OF CHAT IDS FROM THE ENV, IF THE ID DOESN'T MATCH IT WILL REJECT THE REQUEST
-
 	if(! ChatId.includes(request.sender)){
 		return 'Unauthorized'
 	}
@@ -53,7 +52,6 @@ module.exports = botBuilder(async function (request) {
 	switch (request.text) {
 		
 		//THIS USE CASE RETURNS ALARMS WHICH STATE ITS 'ALARM'
-
 		case '/alarms':
 		case '/alarms@BotUserName':
 
@@ -79,12 +77,10 @@ module.exports = botBuilder(async function (request) {
 
 		//THIS USE CASE RETURNS NEGATIVE TWEETS USING ATHENA, IT REQUIRES THE DEPLOY OF AI-DRIVEN SOCIAL MEDIA DASHBOARD
 		//https://aws.amazon.com/solutions/implementations/ai-driven-social-media-dashboard/
-
 		case '/tweets':
 		case '/tweets@BotUserName':
 
 			//ADAPT SQL STATEMENT AS YOU SEE FIT FOR YOUR USE CASE
-		
 			var data;
 			const paramsAthena = {
 			  QueryString: 'SELECT tweetid, text, sentiment FROM tweet_sentiments WHERE sentiment like \'NEGATIVE\' ORDER BY date desc limit 10;',
@@ -131,7 +127,6 @@ module.exports = botBuilder(async function (request) {
 			break;
 
 		//THIS USE CASE RETURNS THE METRICS OF AN ECS SERVICE
-
 		case '/fargate':
 		case '/fargate@BotUserName':
 
@@ -156,7 +151,6 @@ module.exports = botBuilder(async function (request) {
 				//CPU AND MEMORY USAGE
 
 				var now = new Date
-				
 				var data_fargate_cw;
 				const paramsECS_CW = {
 				  EndTime: new Date(now - 1 * MS_PER_MINUTE),
@@ -228,7 +222,6 @@ module.exports = botBuilder(async function (request) {
 
 			//WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
 			//REQUESTS, CONNECTIONS, RESPONSE TIMES AND ERRORS
-
 			var now = new Date
 			var data_alb_cw;
 			const paramsALB_CW = {
@@ -355,17 +348,14 @@ module.exports = botBuilder(async function (request) {
 			} 
 			
 			msg=`Request/m: ${data_alb_cw.MetricDataResults[0].Values[0]}\n4xx: ${data_alb_cw.MetricDataResults[4].Values[0]}\n5xx: ${data_alb_cw.MetricDataResults[3].Values[0]}\nResponse Time: ${data_alb_cw.MetricDataResults[5].Values[0]}\nActive Connections: ${data_alb_cw.MetricDataResults[1].Values[0]}\nNew Connections: ${data_alb_cw.MetricDataResults[2].Values[0]}\n `;
-		
 			break;
 
 		//THIS USE CASE RETURNS THE METRICS OF A CLOUDFRONT DISTRIBUTION
-
 		case '/cloudfront':
 		case '/cloudfront@BotUserName':
 
 			//WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
 			//REQUESTS, BYTES AND ERRORS
-
 			var now = new Date
 			var data_cf_cw;
 			const paramsCF_CW = {
@@ -472,11 +462,9 @@ module.exports = botBuilder(async function (request) {
 			} 
 			
 			msg=`Request/m: ${data_cf_cw.MetricDataResults[0].Values[0]}\nDownloaded GBs/m: ${data_cf_cw.MetricDataResults[1].Values[0]/1024/1024/1024}\n4xx: ${data_cf_cw.MetricDataResults[2].Values[0]}\n5xx: ${data_cf_cw.MetricDataResults[3].Values[0]} `;
-		
 			break;
 
 		//THIS USE CASE RETURNS THE METRICS OF A RDS INSTANCE
-
 		case '/rds':
 		case '/rds@BotUserName':
 			
@@ -500,7 +488,6 @@ module.exports = botBuilder(async function (request) {
 				//CPU, CONNECTIONS AND IOPS
 
 				var now = new Date
-				
 				var data_rds_cw;
 				const paramsRDS_CW = {
 				  EndTime: new Date(now - 1 * MS_PER_MINUTE),
@@ -602,7 +589,6 @@ module.exports = botBuilder(async function (request) {
 });
 
 //FUNCTION TO AWAIT ATHENA RESULTS
-
 function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
