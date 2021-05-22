@@ -2,7 +2,7 @@
 
 The AWS Monitoring Telegram Bot is a subset of two projects that can be deployed as a single unit. It utilizes a Telegram Bot, AWS Lambda Functions, Amazon API Gateway, IAM Roles and other AWS Services to return real time metrics, alarms and insights of running AWS Services. It constitutes a mechanism for retrieving operational data and it keeps you informed of any alarm changes via a centralized private Telegram group chat.
 
-* Proactive push notifications: when a alarm on Amazon Cloudwatch its breached (status change from OK to ALARM) it triggers a SNS notification that invokes an AWS Lambda which in return sends a message to a Telegram Group / 1:1 Chat via a Bot with the alarm status and its values.
+* Proactive push notifications: when a alarm on Amazon Cloudwatch is breached (status change from OK to ALARM) it triggers a SNS notification that invokes an AWS Lambda which in return sends a message to a Telegram Group / 1:1 Chat via a Bot with the alarm status and its values.
 
 * Reactive status updates: upon request from a Group / 1:1 Chat via a Telegram Bot, the command invokes an AWS Lambda function via an Amazon API Gateway. The Lambda function uses CLAUDIA.JS Bot Builder Framework, it then queries the correct AWS service depending of the utilized command: RDS, ECS, Fargate, Cloudfront, ALB, EC2 and others returning its usage, metrics and indicators.<br /><br />Example: the /rds command will retrieve the database size (via the RDS API) of the specified instance in addition to its current CPU, Memory and IOPS usage utilizing the Cloudwatch Metrics API.
 
@@ -38,9 +38,9 @@ To deploy the Lambda functions you are going to need the AWS CLI, NodeJS and CLA
 * NodeJS: https://nodejs.org/en/
 * CLAUDIA.JS: https://claudiajs.com/tutorials/installing.html
 
-Once you install each requirement, make sure you properly configured your AWS Credentials and Region using ``` aws configure ``` with the correct keys. It will require a user which has at least Cloudwatch, SNS, IAM, Lambda and ApiGateway FullAccess permissions.
+Once you install each requirement, make sure you properly configured your AWS Credentials and Region using ``` aws configure ``` with the correct keys. It will require a user which has at least Cloudformation, SNS, IAM, Lambda and ApiGateway FullAccess permissions.
 
-The next steps assume you will be working on us-east-1 (N. Virginia) but you can deploy this solution to any other AWS region, make sure to adapt the scripts and templates below.
+The next steps assume you will be working on us-east-1 (N. Virginia) but you can deploy this solution in any other AWS region, make sure to adapt the scripts and templates below.
 
 ### SNS Topic
 
@@ -95,12 +95,12 @@ Now you are going to assign it basic permissions so it can log any output or err
 aws iam attach-role-policy --role-name lambda-notifier-role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole 
 ```
 
-Let's install the dependencies, zip them, create and deploy the function (make sure to replace the AccountI, ApiKey and ChatID with yours).
+Let's install the dependencies, zip them, create and deploy the function (make sure to replace the AWS AccountID, Bot ApiKey and Telegram ChatID placeholders with yours).
 
 ```  
 npm install
 zip -r function.zip . -x trust-policy.json
-aws lambda create-function --function-name aws-lambda-telegram-notifier --zip-file fileb://function.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::{AccountId}:role/lambda-notifier-role --environment "Variables={API_KEY={APIKey},CHAT_ID={ChatID}}"
+aws lambda create-function --function-name aws-lambda-telegram-notifier --zip-file fileb://function.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::{AccountID}:role/lambda-notifier-role --environment "Variables={API_KEY={APIKey},CHAT_ID={ChatID}}"
 ```
 
 Now you need to Subscribe the newly created Lambda function to the existing SNS Topic. Replace twice the AccountId with yours.
