@@ -1,6 +1,6 @@
 # AWS Monitoring Telegram Bot
 
-The AWS Monitoring Telegram Bot is a subset of two projects that can be deploy as a single unit. It utilizes a Telegram Bot, AWS Lambda Functions, Amazon API Gateway, IAM Roles and other AWS Services to return real time metrics, alarms and insights of running AWS Services. It constitutes a mechanism for retrieving operational data and it keeps you informed of any alarm changes via a centralized private Telegram group chat.
+The AWS Monitoring Telegram Bot is a subset of two projects that can be deployed as a single unit. It utilizes a Telegram Bot, AWS Lambda Functions, Amazon API Gateway, IAM Roles and other AWS Services to return real time metrics, alarms and insights of running AWS Services. It constitutes a mechanism for retrieving operational data and it keeps you informed of any alarm changes via a centralized private Telegram group chat.
 
 * Proactive push notifications: when a alarm on Amazon Cloudwatch its breached (status change from OK to ALARM) it triggers a SNS notification that invokes an AWS Lambda which in return sends a message to a Telegram Group / 1:1 Chat via a Bot with the alarm status and its values.
 
@@ -14,7 +14,7 @@ The AWS Monitoring Telegram Bot is a subset of two projects that can be deploy a
 
 ### Creating and interacting with the Telegram Bot
 
-To create a Telegram Bot, you will be required to have a Telegram account. On the Telegram application (Web, Desktop or Mobile) you will have to interact with @BotFather (https://t.me/BotFather) in order to create a Bot. Go throught the process, provide the name and username. The Bot Father will reply you back with an Api Key, keep it safe!
+To create a Telegram Bot, you will be required to have a Telegram account. On the Telegram application (Web, Desktop or Mobile) you will have to interact with @BotFather (https://t.me/BotFather) in order to create a Bot. Go through the process, provide the name and username. The Bot Father will reply you back with an Api Key, keep it safe!
 
 ![Bot Creation](img/001_bot_creation.png?raw=true "Bot Creation")
 
