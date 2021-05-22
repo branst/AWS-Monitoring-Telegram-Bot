@@ -54,12 +54,12 @@ aws sns create-topic --name CW_Alarms_To_Lambda
 
 Using the AWS CLI you are going to create a Cloudwatch Alarm that is going to trigger notifications into the SNS topic upon metrics changes on AWS Services. For demo purposes I will create an Alarm based on the maximum ECS/Fargate CPU percentage usage in a 1 minute period.
 
-You will need to replace the {AccountId}, {ServiceName} and {ClusterName} with your corresponding values to monitor an ECS Service, it can also be used to monitor other AWS Service by replacing the namespace and dimesions.
+You will need to replace the {AccountId}, {ServiceName} and {ClusterName} with your corresponding values to monitor an ECS Service, it can also be used to monitor other AWS Services by replacing the namespace and dimesions.
 
 Make sure to give it a proper name and description since you will be receiving this information later on the notifications.
 
 ```
-aws cloudwatch put-metric-alarm --alarm-name Alarm-ECS-CPU-USAGE --alarm-description "Monitoring for CPU usage of Fargate on ECS. When exceeds 50% over a 5-minutes period" --metric-name CPUUtilization --namespace AWS/ECS --statistic Maximum --period 60 --threshold 50 --comparison-operator GreaterThanThreshold  --dimensions Name=ServiceName,Value={ServiceName}Name=ClusterName,Value={ClusterName} --evaluation-periods 1 --alarm-actions arn:aws:sns:us-east-1:{AccountId}:CW_Alarms_To_Lambda --unit Percent
+aws cloudwatch put-metric-alarm --alarm-name Alarm-ECS-CPU-USAGE --alarm-description "Monitoring for CPU usage of Fargate on ECS. When exceeds 50% over a 5-minutes period" --metric-name CPUUtilization --namespace AWS/ECS --statistic Maximum --period 60 --threshold 50 --comparison-operator GreaterThanThreshold  --dimensions Name=ServiceName,Value={ServiceName} Name=ClusterName,Value={ClusterName} --evaluation-periods 1 --alarm-actions arn:aws:sns:us-east-1:{AccountId}:CW_Alarms_To_Lambda --unit Percent
 ```
 
 Continue to repeat this process for each alarm you want to create, using always the same SNS Topic.
