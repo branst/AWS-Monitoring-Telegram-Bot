@@ -70,7 +70,7 @@ To use the built-in command /tweets you are going to need to deploy the AWS Soci
 
 You will be able to analyze in real time any negative or positive Tweets about your company, its products or features to ensure availability and user complaints, feedback or comments.
 
-![Tweets](img/0015_tweets.png?raw=true "Tweets")
+![Tweets](img/015_tweets.png?raw=true "Tweets")
 
 To deploy this solution, follow the steps detailed on: https://aws.amazon.com/solutions/implementations/ai-driven-social-media-dashboard/.
 
