@@ -40,6 +40,8 @@ To deploy the Lambda functions you are going to need the AWS CLI, NodeJS and CLA
 
 Once you install each requirement, make sure you properly configured your AWS Credentials and Region using ``` aws configure ``` with the correct keys. It will require a user which has at least Cloudformation, SNS, IAM, Lambda and ApiGateway FullAccess permissions.
 
+The next steps assume you will be working on us-east-1 (N. Virginia) but you can deploy this solution to any other AWS region, make sure to adapt the scripts and templates bellow.
+
 ### SNS Topic
 
 Using the AWS CLI you are going to create the SNS Topic that is going to receive the alarm's status changes and then trigger notifications to our Lambda function. 
@@ -50,17 +52,15 @@ aws sns create-topic --name CW_Alarms_To_Lambda
 
 ### Cloudwatch Alarms
 
-On the AWS Console let's create a Cloudwatch Alarm that is going to trigger notifications into the SNS topic upon metrics changes on AWS Services. For demo purposes I will create an Alarm based on the maximum ECS/Fargate CPU percentage usage in a 5 minutes period.
+Using the AWS CLI you are going to create a Cloudwatch Alarm that is going to trigger notifications into the SNS topic upon metrics changes on AWS Services. For demo purposes I will create an Alarm based on the maximum ECS/Fargate CPU percentage usage in a 1 minute period.
 
-![CW Alarm Metric](img/007_cw_alarm_metric.png?raw=true "CW Alarm Metric")
+You will need to replace the {AccountId}, {ServiceName} and {ClusterName} with your corresponding values to monitor an ECS Service, it can also be used to monitor other AWS Service by replacing the namespace and dimesions.
 
-If the value is higher than 50% on said period it will trigger a message to the SNS topic you previously created.
+Make sure to give it a proper name and description since you will be receiving this information later on the notifications.
 
-![CW Alarm SNS](img/009_cw_alarm_sns.png?raw=true "CW Alarm SNS")
-
-Lastly, make sure to give it a proper name and description, you are going to receive the details later on Telegram.
-
-![CW Alarm Name](img/010_cw_alarm_name.png?raw=true "CW Alarm Name")
+```
+aws cloudwatch put-metric-alarm --alarm-name Alarm-ECS-CPU-USAGE --alarm-description "Monitoring for CPU usage of Fargate on ECS. When exceeds 50% over a 5-minutes period" --metric-name CPUUtilization --namespace AWS/ECS --statistic Maximum --period 60 --threshold 50 --comparison-operator GreaterThanThreshold  --dimensions Name=ServiceName,Value={ServiceName}Name=ClusterName,Value={ClusterName} --evaluation-periods 1 --alarm-actions arn:aws:sns:us-east-1:{AccountId}:CW_Alarms_To_Lambda --unit Percent
+```
 
 Continue to repeat this process for each alarm you want to create, using always the same SNS Topic.
 
