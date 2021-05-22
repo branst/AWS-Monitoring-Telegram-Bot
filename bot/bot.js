@@ -2,7 +2,7 @@
 //MAKE SURE TO REPLACE {BotUserName} WITH YOUR BOT USERNAME
 //*****************//
 
-//DEPENDENCIES FOR API CALLS USING AWS JS V3 SDK
+//DEPENDENCIES FOR API CALLS USING AWS JS SDK V3
 //https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/index.html
 
 const { CloudWatchClient, DescribeAlarmsCommand,GetMetricDataCommand } = require("@aws-sdk/client-cloudwatch");
@@ -10,7 +10,7 @@ const { ECSClient, DescribeServicesCommand } = require("@aws-sdk/client-ecs");
 const { RDSClient, DescribeDBInstancesCommand } = require("@aws-sdk/client-rds");
 const { AthenaClient, StartQueryExecutionCommand,GetQueryResultsCommand } = require("@aws-sdk/client-athena");
 
-//ENV VARIBLE FOR AWS REGION, SHOULD BE SET ON AWS LAMBDA CONSOLE
+//ENV VARIBLE FOR AWS REGION
 
 const AWSRegion = 'us-east-1'
 
