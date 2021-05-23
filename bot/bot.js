@@ -43,6 +43,8 @@ var botBuilder = require('claudia-bot-builder');
 module.exports = botBuilder(async function (request) {
 
 	var msg = ''
+	var now = new Date;
+	var data;
 
 	//IT RETRIEVES AUTHORIZED ARRAYS OF CHAT IDS FROM THE ENV, IF THE ID DOESN'T MATCH IT WILL REJECT THE REQUEST
 	if(! ChatId.includes(request.sender)){
@@ -55,7 +57,6 @@ module.exports = botBuilder(async function (request) {
 		case '/alarms':
 		case '/alarms@BotUserName':
 
-			var data;
 			const paramsCW = {
 			  StateValue: 'ALARM'
 			};
@@ -81,8 +82,7 @@ module.exports = botBuilder(async function (request) {
 		case '/tweets@BotUserName':
 
 			//ADAPT SQL STATEMENT AS YOU SEE FIT FOR YOUR USE CASE
-			var data;
-			const paramsAthena = {
+			sconst paramsAthena = {
 			  QueryString: 'SELECT tweetid, text, sentiment FROM tweet_sentiments WHERE sentiment like \'NEGATIVE\' ORDER BY date desc limit 10;',
 			  QueryExecutionContext: {
 			    Catalog: GlueCatalog,
@@ -149,8 +149,6 @@ module.exports = botBuilder(async function (request) {
 
 				//IF WE FOUND A MATCHING RUNNING SERVICE, WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
 				//CPU AND MEMORY USAGE
-
-				var now = new Date
 				var data_fargate_cw;
 				const paramsECS_CW = {
 				  EndTime: new Date(now - 1 * MS_PER_MINUTE),
@@ -222,7 +220,6 @@ module.exports = botBuilder(async function (request) {
 
 			//WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
 			//REQUESTS, CONNECTIONS, RESPONSE TIMES AND ERRORS
-			var now = new Date
 			var data_alb_cw;
 			const paramsALB_CW = {
 			  EndTime: new Date(now - 1 * MS_PER_MINUTE),
@@ -356,7 +353,6 @@ module.exports = botBuilder(async function (request) {
 
 			//WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
 			//REQUESTS, BYTES AND ERRORS
-			var now = new Date
 			var data_cf_cw;
 			const paramsCF_CW = {
 			  EndTime: new Date(now - 1 * MS_PER_MINUTE),
@@ -468,7 +464,6 @@ module.exports = botBuilder(async function (request) {
 		case '/rds':
 		case '/rds@BotUserName':
 			
-			var data;
 			const paramsRDS = {
 			  DBInstanceIdentifier: RDSName
 			};
@@ -486,8 +481,6 @@ module.exports = botBuilder(async function (request) {
 
 				//IF WE FOUND IT, WE ARE GOING TO RETRIEVE ITS METRICS FROM CW METRICS
 				//CPU, CONNECTIONS AND IOPS
-
-				var now = new Date
 				var data_rds_cw;
 				const paramsRDS_CW = {
 				  EndTime: new Date(now - 1 * MS_PER_MINUTE),
